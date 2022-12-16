@@ -51,24 +51,6 @@ public class UserController {
         return "admin/new";
     }
 
-    @GetMapping("/admin/gen5")
-    public String gen5(Model model) {
-        Role role = new Role();
-        role.setRole("ROLE_USER");
-        roleService.update(1,role);
-        userService.gen5Users(role);
-        return "admin/index";
-    }
-
-    @GetMapping("/admin/gen5mod")
-    public String gen5mod(Model model) {
-        Role role = new Role();
-        role.setRole("USER");
-        roleService.update(1,role);
-        userService.gen5Users(role);
-        return "admin/index";
-    }
-
     @PostMapping("/admin")
     public String create(@ModelAttribute("user") @Valid User user, BindingResult bindingRequest) {
         if (bindingRequest.hasErrors()) return "admin/new";
@@ -100,8 +82,8 @@ public class UserController {
         return "redirect:/admin";
     }
 
-    @GetMapping ("/user")
-    public String myPage (Principal principal, Model model) {
+    @GetMapping("/user")
+    public String myPage(Principal principal, Model model) {
         model.addAttribute("user", userService.findByName(principal.getName()));
         model.addAttribute("simpleGrantedAuthority", new SimpleGrantedAuthority("ADMIN"));
         return "user";

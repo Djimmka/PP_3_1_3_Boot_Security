@@ -19,6 +19,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
 
     private final MyUserDetailService myUserDetailService;
+
     @Autowired
     public WebSecurityConfig(SuccessUserHandler successUserHandler, MyUserDetailService myUserDetailService) {
         this.successUserHandler = successUserHandler;
@@ -29,10 +30,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-//                .antMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
-//                .antMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
-//                .antMatchers(HttpMethod.PATCH, "/admin/**").hasRole("ADMIN")
-//                .antMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user").hasRole("USER")
                 .antMatchers("/", "/index").permitAll()
@@ -44,23 +41,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/logout")
                 .permitAll();
-        //http.csrf().disable();
     }
 
-    // аутентификация inMemory
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
         return myUserDetailService;
-
-//        UserDetails user =
-//                User.withDefaultPasswordEncoder()
-//                        .username("user")
-//                        .password("user")
-//                        .roles("USER")
-//                        .build();
-//
-//        return new InMemoryUserDetailsManager(user);
     }
 
     @Bean

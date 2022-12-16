@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
+
 public class UserServiceImp implements UserService {
 
     private final UsersRepository usersRepository;
@@ -23,18 +23,25 @@ public class UserServiceImp implements UserService {
         this.usersRepository = usersRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<User> findAll() {
         return usersRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public User findById(long id) {
         Optional<User> user = usersRepository.findById(id);
         return user.orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public User findByName(String name) {
-        Optional<User> user =  usersRepository.findAll().stream().filter(s -> Objects.equals(s.getUsername(), name)).findFirst();
-        return user.orElse(null);
+        try {
+            User user = usersRepository.findByUsername(name);
+            return user;
+        } catch (RuntimeException e) {
+            return null;
+        }
     }
 
     @Transactional
@@ -51,14 +58,6 @@ public class UserServiceImp implements UserService {
     @Transactional
     public void delete(long id) {
         usersRepository.deleteById(id);
-    }
-
-    @Transactional
-    public void gen5Users(Role role) {
-        for (int i = 1; i < 6; i++) {
-            User user = new User(String.valueOf(2220 + i), "name_" + i, "lastName_" + i, role);
-            update((long) i, user);
-        }
     }
 
 }
